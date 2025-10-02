@@ -303,27 +303,28 @@ pkg/kubelet/
 
 ## 💡 学习重点和技巧
 
-### 1. 理解控制器模式
-```go
-// K8s使用控制器模式来管理资源状态
-// 核心思想：持续监控期望状态vs实际状态，并采取行动
-func (dc *DeploymentController) syncDeployment(ctx context.Context, key string) error {
-    // 1. 获取期望状态
-    // 2. 获取实际状态  
-    // 3. 计算差异
-    // 4. 执行操作
-    // 5. 更新状态
-}
-```
+### 1. 理解K8s使用的设计模式
 
-### 2. 学习事件驱动架构
+#### 1.1 MVC架构模式
+K8s使用MVC架构模式，其中：
+- **Model**：Kubernetes资源对象（Deployment、ReplicaSet、Pod等）
+- **View**：API Server提供的REST API接口
+- **Controller**：各种控制器（DeploymentController、ReplicaSetController等）
+
+#### 1.2 观察者模式
+K8s使用观察者模式处理资源状态变化：
 ```go
-// K8s使用事件驱动来处理状态变化
 // 当资源状态改变时，触发相应的处理逻辑
 func (dc *DeploymentController) addDeployment(obj interface{}) {
     // 处理新增部署事件
 }
 ```
+
+#### 1.3 策略模式
+K8s使用策略模式实现不同的部署策略：
+- **RollingUpdate**：滚动更新策略
+- **Recreate**：重建策略
+- **BlueGreen**：蓝绿部署策略
 
 ### 3. 理解批量操作策略
 ```go
@@ -448,7 +449,7 @@ func (bgs *BlueGreenStrategy) deploy(service ServiceConfig) error {
 - 写伪代码验证理解
 
 ### 2. 重点关注
-- **控制器模式**：这是K8s的核心设计模式
+- **MVC架构模式**：这是K8s的核心架构模式
 - **状态同步**：期望状态vs实际状态的同步机制
 - **批量操作**：如何高效管理大量实例
 - **故障处理**：如何处理各种异常情况
@@ -462,8 +463,8 @@ func (bgs *BlueGreenStrategy) deploy(service ServiceConfig) error {
 ## 📊 学习成果验收
 
 ### 学习完成后，应该能够：
-1. **理解K8s核心设计模式**
-   - 控制器模式的工作原理
+1. **理解K8s核心架构模式**
+   - MVC架构模式的工作原理
    - 期望状态vs实际状态的同步机制
    - 事件驱动的架构设计
 
@@ -498,3 +499,25 @@ func (bgs *BlueGreenStrategy) deploy(service ServiceConfig) error {
 - **IDE插件**：Go语言支持、Kubernetes插件
 - **调试工具**：Delve调试器、pprof性能分析
 - **文档工具**：Mermaid图表、Markdown编辑器
+
+## 🎯 学习总结
+
+### 学习思路完全正确！
+通过研究K8s源码，可以学到：
+
+1. **成熟的架构模式**：MVC架构模式、观察者模式、策略模式
+2. **高效的算法实现**：状态同步、批量操作、故障恢复
+3. **完善的架构设计**：模块化、可扩展、可维护
+4. **丰富的实践经验**：如何处理各种边界情况
+
+### 关键收获
+- **理解K8s的设计思想**，而不是照搬代码
+- **选择合适的设计模式**，根据Floyd系统特点
+- **实现核心功能**，逐步完善发布模块
+- **解决实际问题**，提高系统可靠性
+
+---
+
+**记住**：学习K8s源码的目的是理解其设计思想，而不是照搬代码。要根据Floyd系统特点，选择合适的设计模式和实现方式。
+
+**下一步**：开始按照学习计划，逐步深入学习K8s源码，并将学到的知识应用到Floyd发布模块的设计和实现中。
