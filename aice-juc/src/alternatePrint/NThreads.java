@@ -49,7 +49,7 @@ public class NThreads {
                     for (Condition c : conditionList) {
                         c.signal();
                     }
-                    break;
+                    return;
                 }
                 // 如果不是目标index的线程，则等待
                 while (threadIndex != curThreadIndex) {
