@@ -18,7 +18,7 @@ public class ThreeThreads {
                     // 先检查是否已超范围，超了就唤醒其他线程并退出
                     if (count > n) {
                         lock.notifyAll(); // 唤醒所有可能等待的线程
-                        break;
+                        return;
                     }
                     while (flag != 1) {
                         try {
@@ -44,7 +44,7 @@ public class ThreeThreads {
                     // 先检查是否已超范围，超了就唤醒其他线程并退出
                     if (count > n) {
                         lock.notifyAll(); // 唤醒所有可能等待的线程
-                        break;
+                        return;
                     }
                     while (flag != 2) {
                         try {
@@ -71,7 +71,7 @@ public class ThreeThreads {
                     // 先检查是否已超范围，超了就唤醒其他线程并退出
                     if (count > n) {
                         lock.notifyAll(); // 唤醒所有可能等待的线程
-                        break;
+                        return;
                     }
                     while (flag != 3) {
                         try {
@@ -108,7 +108,7 @@ public class ThreeThreads {
                             synchronized (lock3) {
                                 lock3.notify();
                             }
-                            break;
+                            return;
                         }
                         while (flag != 1) {
                             lock1.wait();
@@ -147,7 +147,7 @@ public class ThreeThreads {
                             synchronized (lock3) {
                                 lock3.notify();
                             }
-                            break;
+                            return;
                         }
                         while (flag != 2) {
                             lock2.wait();
@@ -186,7 +186,7 @@ public class ThreeThreads {
                             synchronized (lock2) {
                                 lock2.notify();
                             }
-                            break;
+                            return;
                         }
                         while (flag != 3) {
                             lock3.wait();
