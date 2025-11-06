@@ -1,10 +1,10 @@
 package alternatePrint;
 
-public class TwoNum {
+public class TwoThreads {
     private volatile int count = 1;
     private final Object lock = new Object();
 
-    public TwoNum() {}
+    public TwoThreads() {}
 
     // 双线程交替打印
     public void printTwoNum(int n) {

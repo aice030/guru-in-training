@@ -1,6 +1,6 @@
 package alternatePrint;
 
-public class ThreeNum {
+public class ThreeThreads {
     private volatile int flag = 1;
     private volatile int count = 1;
     private final Object lock = new Object();
@@ -9,7 +9,7 @@ public class ThreeNum {
     private final Object lock2 = new Object();
     private final Object lock3 = new Object();
 
-    public  ThreeNum() {}
+    public ThreeThreads() {}
 
     public void printThreeNum(int n) {
         Thread t1 = new Thread(() -> {
