@@ -8,19 +8,27 @@ public class TwoThreads {
 
     // 双线程交替打印
     public void printTwoNum(int n) {
-        // 线程t2，打印偶数
+        // 线程t1，打印奇数
         Thread t1 = new Thread(() -> {
-            while (count <= n) {
+            while (true) {
                 synchronized (lock) {
-                    if (count % 2 == 1) {
-                        System.out.println("odd thread: " + count++);
-                        lock.notify();
-                    }else {
-                        try {
-                            lock.wait();
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
+                    try{
+                        if (count > n) {
+                            lock.notifyAll();
+                            return;
                         }
+                        while (count % 2 != 1) {
+                            lock.wait();
+                            if (count > n) {
+                                lock.notifyAll();
+                                return;
+                            }
+                        }
+                        System.out.println("Tread1: " + count);
+                        count++;
+                        lock.notifyAll();
+                    }catch (InterruptedException e){
+                        e.printStackTrace();
                     }
                 }
             }
@@ -28,17 +36,25 @@ public class TwoThreads {
 
         // 线程t2，打印偶数
         Thread t2 = new Thread(() -> {
-            while (count <= n) {
+            while (true) {
                 synchronized (lock) {
-                    if (count % 2 == 0) {
-                        System.out.println("even thread: " + count++);
-                        lock.notify();
-                    }else {
-                        try {
-                            lock.wait();
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
+                    try{
+                        if (count > n) {
+                            lock.notifyAll();
+                            return;
                         }
+                        while (count % 2 != 0) {
+                            lock.wait();
+                            if (count > n) {
+                                lock.notifyAll();
+                                return;
+                            }
+                        }
+                        System.out.println("Tread2: " + count);
+                        count++;
+                        lock.notifyAll();
+                    }catch (InterruptedException e){
+                        e.printStackTrace();
                     }
                 }
             }
