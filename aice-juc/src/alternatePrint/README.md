@@ -31,3 +31,13 @@
 2. 打印数量和预期不符
 原因：当while(count<=n)判断错误结束后，可能有线程已经通过了这层判断，正在while（flag != 2)的循环中等待，导致flag和count不一致
 解决：将while(count <= n)判断条件改为while(true)，改为在循环中判断打印是否完成，并在线程被唤醒时也添加检查打印是否完成的判断逻辑，确保count和flag的强一致性
+
+## 2. printThreeNumWithLocks()方法
+### return的作用域
+Thread中的return终结的是当前线程，而不是整个 printThreeNumWithLocks()方法
+### 为什么唤醒时要加锁synchronized(lock1){lock1.notify()}
+唤醒其他线程（调用 notify()）必须在同步块（synchronized）中进行
+#### 原因
+Java中，wait()、notify()、notifyAll() 这三个方法的调用，都必须满足一个前提：当前线程必须持有该对象的监视器锁。监视器锁是 synchronized 的底层实现机制，当线程执行 synchronized(obj) 时，会获取 obj 的监视器锁；退出同步块时，会释放该锁。
+notify()的作用是 “唤醒正在等待该对象监视器锁的线程”，而只有持有该锁的线程，才有权利操作等待队列（唤醒线程本质是修改等待队列的状态）。
+如果不在 synchronized(obj) 块中调用 obj.notify()，当前线程没有持有 obj 的监视器锁，就无权操作其等待队列，因此会抛出异常。

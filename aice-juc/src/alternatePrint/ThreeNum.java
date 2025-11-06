@@ -5,6 +5,10 @@ public class ThreeNum {
     private volatile int count = 1;
     private final Object lock = new Object();
 
+    private final Object lock1 = new Object();
+    private final Object lock2 = new Object();
+    private final Object lock3 = new Object();
+
     public  ThreeNum() {}
 
     public void printThreeNum(int n) {
@@ -87,6 +91,129 @@ public class ThreeNum {
                 }
             }
         });
+        t1.start();
+        t2.start();
+        t3.start();
+    }
+
+    public void printThreeNumWithLocks(int n) {
+        Thread t1 = new Thread(() -> {
+            while (true) {
+                synchronized (lock1) {
+                    try{
+                        if (count > n) {
+                            synchronized (lock2) {
+                                lock2.notify();
+                            }
+                            synchronized (lock3) {
+                                lock3.notify();
+                            }
+                            break;
+                        }
+                        while (flag != 1) {
+                            lock1.wait();
+                            if (count > n) {
+                                synchronized (lock2) {
+                                    lock2.notify();
+                                }
+                                synchronized (lock3) {
+                                    lock3.notify();
+                                }
+                                return;
+                            }
+                        }
+                        System.out.println("thread1: " + flag);
+                        count++;
+                        flag = 2;
+                        // 唤醒下一个线程
+                        synchronized (lock2) {
+                            lock2.notify();
+                        }
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+
+        Thread t2 = new Thread(() -> {
+            while (true) {
+                synchronized (lock2) {
+                    try{
+                        if (count > n) {
+                            synchronized (lock1) {
+                                lock1.notify();
+                            }
+                            synchronized (lock3) {
+                                lock3.notify();
+                            }
+                            break;
+                        }
+                        while (flag != 2) {
+                            lock2.wait();
+                            if (count > n) {
+                                synchronized (lock1) {
+                                    lock1.notify();
+                                }
+                                synchronized (lock3) {
+                                    lock3.notify();
+                                }
+                                return;
+                            }
+                        }
+                        System.out.println("thread2: " + flag);
+                        count++;
+                        flag = 3;
+                        // 唤醒下一个线程
+                        synchronized (lock3) {
+                            lock3.notify();
+                        }
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+
+        Thread t3 = new Thread(() -> {
+            while (true) {
+                synchronized (lock3) {
+                    try{
+                        if (count > n) {
+                            synchronized (lock1) {
+                                lock1.notify();
+                            }
+                            synchronized (lock2) {
+                                lock2.notify();
+                            }
+                            break;
+                        }
+                        while (flag != 3) {
+                            lock3.wait();
+                            if (count > n) {
+                                synchronized (lock1) {
+                                    lock1.notify();
+                                }
+                                synchronized (lock2) {
+                                    lock2.notify();
+                                }
+                                return;
+                            }
+                        }
+                        System.out.println("thread1: " + flag);
+                        count++;
+                        flag = 1;
+                        // 唤醒下一个线程
+                        synchronized (lock1) {
+                            lock1.notify();
+                        }
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+
         t1.start();
         t2.start();
         t3.start();
