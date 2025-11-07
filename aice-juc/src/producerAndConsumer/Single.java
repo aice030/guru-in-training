@@ -9,6 +9,7 @@ import java.util.concurrent.locks.Condition;
 
 /**
  * 单生产者、单消费者
+ * @author aice
  */
 public class Single {
     private final Deque<Integer> queue = new ArrayDeque<>();
