@@ -1,5 +1,9 @@
 package alternatePrint;
 
+/**
+ * @author aice
+ * 三线程交替打印
+ */
 public class ThreeThreads {
     private volatile int flag = 1;
     private volatile int count = 1;

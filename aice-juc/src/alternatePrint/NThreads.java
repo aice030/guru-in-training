@@ -6,7 +6,10 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-// 泛化，n个线程交替打印m个数字
+/**
+ * @author aice
+ * 泛化，n个线程交替打印m个数字
+ */
 public class NThreads {
     // 通过Condition控制并发
     private final Lock lock = new ReentrantLock();

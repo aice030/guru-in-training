@@ -1,5 +1,9 @@
 package alternatePrint;
 
+/**
+ * @author aice
+ * 双线程交替打印
+ */
 public class TwoThreads {
     private volatile int count = 1;
     private final Object lock = new Object();
