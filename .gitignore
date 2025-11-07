@@ -1,3 +1,7 @@
+# Ignore Main entry files under any module's src directory
+**/src/Main
+**/src/Main.*
+
 ### IntelliJ IDEA ###
 .idea/
 out/
