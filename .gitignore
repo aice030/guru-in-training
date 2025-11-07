@@ -2,6 +2,9 @@
 **/src/Main
 **/src/Main.*
 
+# Ignore IntelliJ module files
+*.iml
+
 ### IntelliJ IDEA ###
 .idea/
 out/
