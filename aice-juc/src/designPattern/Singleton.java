@@ -1,4 +1,4 @@
-package Singleton;
+package designPattern;
 
 /**
  * 懒汉式单例模式
