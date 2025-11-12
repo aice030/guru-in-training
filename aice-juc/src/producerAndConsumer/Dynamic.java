@@ -7,6 +7,11 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * 多生产者、多消费者
+ * 可随时调整生产者、消费者数量
+ * @author aice
+ */
 public class Dynamic {
     private final int M;
     private final int N;
