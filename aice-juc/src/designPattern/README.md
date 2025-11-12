@@ -1,4 +1,4 @@
-# designPattern 懒汉式单例模式
+# Singleton 单例模式（懒汉式）
 
 ## 1. 核心注意事项
 - `instance` 必须使用 `volatile`：防止指令重排导致其他线程读到“半初始化”对象，保证可见性和有序性。
