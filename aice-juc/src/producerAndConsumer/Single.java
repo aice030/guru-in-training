@@ -30,7 +30,7 @@ public class Single {
         lock.lock();
         try{
             while (queue.size() == maxCapacity) {
-                fullCondition .await();
+                fullCondition.await();
             }
             queue.offer(data);
             System.out.println(("produce: " + data + ", queue size: " + queue.size()));
