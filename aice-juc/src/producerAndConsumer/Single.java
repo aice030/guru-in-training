@@ -18,9 +18,9 @@ public class Single {
     private volatile boolean isRunning = true;
     private final Lock lock = new ReentrantLock();
     // 队列不满的条件（生产者等待）
-    private final Condition notFull = lock.newCondition();
+    private final Condition fullCondition = lock.newCondition();
     // 队列不空的条件（消费者等待）
-    private final Condition notEmpty = lock.newCondition();
+    private final Condition emptyCondition = lock.newCondition();
 
     public Single(int maxCapacity) {
         this.maxCapacity = maxCapacity;
@@ -30,11 +30,11 @@ public class Single {
         lock.lock();
         try{
             while (queue.size() == maxCapacity) {
-                notFull.await();
+                fullCondition .await();
             }
             queue.offer(data);
             System.out.println(("produce: " + data + ", queue size: " + queue.size()));
-            notEmpty.signal();
+            fullCondition.signal();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } finally {
@@ -46,11 +46,11 @@ public class Single {
         lock.lock();
         try{
             while (queue.isEmpty()) {
-                notEmpty.await();
+                fullCondition.await();
             }
             int data = queue.poll();
             System.out.println(("consume: " + data + ", queue size: " + queue.size()));
-            notFull.signal();
+            fullCondition.signal();
         }catch(InterruptedException e){
             Thread.currentThread().interrupt();
         }finally {
@@ -61,14 +61,14 @@ public class Single {
     public void startRunning() {
         Thread producer = new Thread(() -> {
             int data = 1;
-           while (isRunning) {
-               try{
+            while (isRunning) {
+                try{
                    produce(data++);
                    TimeUnit.MILLISECONDS.sleep(500);
-               } catch (InterruptedException e) {
-                   Thread.currentThread().interrupt();
-               }
-           }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
         });
 
         Thread consumer = new Thread(() -> {
