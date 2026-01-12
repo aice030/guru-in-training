@@ -29,14 +29,14 @@ public class Single {
     public void produce(int data) {
         lock.lock();
         try{
-            while (queue.size() == maxCapacity) {
+            while (queue.size() == maxCapacity && isRunning) {
                 fullCondition.await();
             }
             queue.offer(data);
             System.out.println(("produce: " + data + ", queue size: " + queue.size()));
-            fullCondition.signal();
+            emptyCondition.signal();
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            System.out.println(e.getMessage());
         } finally {
             lock.unlock();
         }
@@ -45,14 +45,14 @@ public class Single {
     public  void consume() {
         lock.lock();
         try{
-            while (queue.isEmpty()) {
-                fullCondition.await();
+            while (queue.isEmpty() && isRunning) {
+                emptyCondition.await();
             }
             int data = queue.poll();
             System.out.println(("consume: " + data + ", queue size: " + queue.size()));
             fullCondition.signal();
         }catch(InterruptedException e){
-            Thread.currentThread().interrupt();
+            System.out.println(e.getMessage());
         }finally {
             lock.unlock();
         }
@@ -66,7 +66,8 @@ public class Single {
                    produce(data++);
                    TimeUnit.MILLISECONDS.sleep(500);
                 } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
+                    System.out.println(e.getMessage());
+                    break;
                 }
             }
         });
@@ -77,7 +78,8 @@ public class Single {
                     consume();
                     TimeUnit.MILLISECONDS.sleep(1000);
                 } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
+                    System.out.println(e.getMessage());
+                    break;
                 }
             }
         });

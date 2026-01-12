@@ -45,7 +45,7 @@ public class Dynamic {
             System.out.println(("producer" + threadIndex + ": " + data.get() + ", queue size: " + queue.size()));
             emptyCondition.signal();
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            System.out.println(e.getMessage());
         } finally {
             lock.unlock();
         }
@@ -61,7 +61,7 @@ public class Dynamic {
             System.out.println(("consumer" + threadIndex + ": " + tempData + ", queue size: " + queue.size()));
             fullCondition.signal();
         }catch(InterruptedException e) {
-            Thread.currentThread().interrupt();
+            System.out.println(e.getMessage());
         }finally {
             lock.unlock();
         }
@@ -78,7 +78,7 @@ public class Dynamic {
                             Thread.sleep(500);
                             produce(curProducerIndex);
                         } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
+                            System.out.println(e.getMessage());
                             return;
                         }
                     }
@@ -104,7 +104,7 @@ public class Dynamic {
                            Thread.sleep(1000);
                            consume(curConsumerIndex);
                        }catch (InterruptedException e){
-                           Thread.currentThread().interrupt();
+                           System.out.println(e.getMessage());
                            return;
                        }
                    }
