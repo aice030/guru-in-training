@@ -204,7 +204,7 @@ public class ThreeThreads {
                                 return;
                             }
                         }
-                        System.out.println("thread1: " + flag);
+                        System.out.println("thread3: " + flag);
                         count++;
                         flag = 1;
                         // 唤醒下一个线程
