@@ -26,8 +26,8 @@ public class Dynamic {
     private final Deque<Thread> consumerQueue = new ArrayDeque<>();
 
     private final Lock lock = new ReentrantLock();
-    private final Condition notFull = lock.newCondition();
-    private final Condition notEmpty = lock.newCondition();
+    private final Condition fullCondition = lock.newCondition();
+    private final Condition emptyCondition = lock.newCondition();
 
     public Dynamic(int m, int n, int maxCapacity) {
         this.M = m;
@@ -39,11 +39,11 @@ public class Dynamic {
         lock.lock();
         try{
             while (queue.size() == maxCapacity) {
-                notFull.await();
+                fullCondition.await();
             }
             queue.offer(data.getAndIncrement());
             System.out.println(("producer" + threadIndex + ": " + data.get() + ", queue size: " + queue.size()));
-            notEmpty.signal();
+            emptyCondition.signal();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } finally {
@@ -55,11 +55,11 @@ public class Dynamic {
         lock.lock();
         try{
             while (queue.isEmpty()) {
-                notEmpty.await();
+                emptyCondition.await();
             }
             int tempData = queue.poll();
             System.out.println(("consumer" + threadIndex + ": " + tempData + ", queue size: " + queue.size()));
-            notFull.signal();
+            fullCondition.signal();
         }catch(InterruptedException e) {
             Thread.currentThread().interrupt();
         }finally {
