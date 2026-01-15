@@ -14,7 +14,7 @@ public class NThreads {
     // 通过Condition控制并发
     private final Lock lock = new ReentrantLock();
     private final List<Condition> conditionList = new ArrayList<Condition>();
-    private volatile int curThreadIndex = 0;
+    private int curThreadIndex = 0;
     private volatile int count = 1;
     private final int m;
     private final int n;
@@ -47,27 +47,21 @@ public class NThreads {
         while (true) {
             lock.lock();
             try{
+                // 如果不是目标index的线程，则等待
+                while (threadIndex != curThreadIndex && count <= m) {
+                    try{
+                        Condition condition = conditionList.get(threadIndex);
+                        condition.await();
+                    }catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+                }
+                // 若打印已经结束，唤醒所有线程，避免有线程一直等待
                 if (count > m) {
-                    // 若打印已经结束，唤醒所有线程，避免有线程一直等待
                     for (Condition c : conditionList) {
                         c.signal();
                     }
                     return;
-                }
-                // 如果不是目标index的线程，则等待
-                while (threadIndex != curThreadIndex) {
-                    try{
-                        Condition condition = conditionList.get(threadIndex);
-                        condition.await();
-                        if (count > m) {
-                            for (Condition c : conditionList) {
-                                c.signal();
-                            }
-                            return;
-                        }
-                    }catch (InterruptedException e){
-                        e.printStackTrace();
-                    }
                 }
                 System.out.println("Thread" + (curThreadIndex + 1) + ": " + count);
                 count++;
